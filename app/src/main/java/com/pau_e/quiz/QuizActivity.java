@@ -1,5 +1,6 @@
 package com.pau_e.quiz;
 
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,23 +16,23 @@ public class QuizActivity extends AppCompatActivity {
             R.id.answer1, R.id.answer2 , R.id.answer3, R.id.answer4
     };
 
-    private int solution;
-    private RadioGroup answers;
+    private RadioGroup rgroup;
+
+    //Dades sobre les preguntes
+    private String[] questions;
+    private String[][] answers;
+    private int[] solutions;
+
+    private int curr; //current question index
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        TextView question_text = findViewById(R.id.question_text);
-        question_text.setText(R.string.question_content);
-
-        String[] answer_texts = getResources().getStringArray(R.array.answer_texts);
-
-        for (int i = 0; i < answer_texts.length; i++){
-            RadioButton rb = findViewById(ids_botons[i]);
-            rb.setText(answer_texts[i]);
-        }
+        curr = 0;
+        loadQuestions();
+        showQuestion();
 
         Button btn_check = findViewById(R.id.btn_check);
         btn_check.setOnClickListener(new View.OnClickListener() {
@@ -41,12 +42,32 @@ public class QuizActivity extends AppCompatActivity {
             }
         });
 
-        solution = getResources().getInteger(R.integer.solution);
-        answers = findViewById(R.id.answers);
+        rgroup = findViewById(R.id.answers);
+    }
+
+    private void loadQuestions() {
+        Resources res = getResources();
+        questions = res.getStringArray(R.array.questions);
+        solutions = res.getIntArray(R.array.solutions);
+        String[] answ = res.getStringArray(R.array.answer_texts);
+        answers = new String[answ.length][];
+        for(int i = 0; i < answ.length; i++){
+            answers[i] = answ[i].split(";");
+        }
+    }
+
+    private void showQuestion() {
+        TextView question_text = findViewById(R.id.question_text);
+        question_text.setText(questions[0]);
+
+        for (int i = 0; i < answers[0].length; i++){
+            RadioButton rb = findViewById(ids_botons[i]);
+            rb.setText(answers[curr][i]);
+        }
     }
 
     private void checkAnswer() {
-        int id_check = answers.getCheckedRadioButtonId();
+        int id_check = rgroup.getCheckedRadioButtonId();
         int quin = -1;
         for (int i=0; i < ids_botons.length;i++){
             if (id_check == ids_botons[i]){
@@ -54,7 +75,7 @@ public class QuizActivity extends AppCompatActivity {
             }
         }
         if (quin != -1){
-            if (quin == solution){
+            if (quin == solutions[curr]){
                 Toast.makeText(this, "Correcte!", Toast.LENGTH_SHORT).show();
             }
             else{

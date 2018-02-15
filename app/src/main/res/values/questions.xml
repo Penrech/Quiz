@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="questions">
+        <item>Quina és la capital d\'Afganistan?</item>
+        <item>Quina és la capital d\'Estonia?</item>
+    </array>
+
+    <array name="answer_texts">
+        <item>Paris;Londres;Roma;Kabul</item>
+        <item>Tallin;St.Petersburg;Berlín;Copenhagen</item>
+    </array>
+
+    <integer-array name="solutions">
+        <item>4</item>
+        <item>1</item>
+    </integer-array>
+
+
+
+</resources>
